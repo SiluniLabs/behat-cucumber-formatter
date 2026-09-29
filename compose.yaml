@@ -1,0 +1,16 @@
+services:
+  php:
+    image: behat-cucumber-formatter:php${PHP_VERSION:-8.4}
+    build:
+      context: .
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.4}
+      secrets:
+        - ca_cert
+    user: ${UID:-1000}:${GID:-1000}
+    volumes:
+      - .:/app
+
+secrets:
+  ca_cert:
+    file: ${CA_CERT:-/dev/null}

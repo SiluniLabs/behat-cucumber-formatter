@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.4', '8.5']
+        include:
+          - php: '8.4'
+            coverage: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: ${{ matrix.coverage && 'pcov' || 'none' }}
+      - run: composer install --no-interaction --no-progress
+      - run: composer test
+        if: ${{ !matrix.coverage }}
+      - run: vendor/bin/phpunit --coverage-text=coverage.txt --colors=never
+        if: ${{ matrix.coverage }}
+      - name: Coverage summary
+        if: ${{ matrix.coverage }}
+        run: |
+          {
+            echo '## Code coverage'
+            echo '```'
+            cat coverage.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - run: composer phpstan
+      - run: composer cs
