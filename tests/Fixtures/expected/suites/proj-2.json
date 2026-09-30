@@ -1,0 +1,87 @@
+[
+    {
+        "uri": "features/calculator.feature",
+        "id": "calculator",
+        "keyword": "Feature",
+        "name": "Calculator",
+        "description": "    In order to count\n    As a user\n    I need to add values",
+        "line": 2,
+        "tags": [
+            {
+                "name": "@calculator",
+                "line": 1
+            }
+        ],
+        "elements": [
+            {
+                "id": "calculator;failing-scenario",
+                "keyword": "Scenario",
+                "name": "Failing scenario",
+                "description": "",
+                "line": 20,
+                "type": "scenario",
+                "tags": [
+                    {
+                        "name": "@calculator",
+                        "line": 1
+                    },
+                    {
+                        "name": "@PROJ-2",
+                        "line": 19
+                    }
+                ],
+                "steps": [
+                    {
+                        "keyword": "Given ",
+                        "name": "a value of 1",
+                        "line": 8,
+                        "match": {
+                            "location": "CalculatorContext::aValueOf()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "When ",
+                        "name": "I add 2",
+                        "line": 21,
+                        "match": {
+                            "location": "CalculatorContext::iAdd()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "Then ",
+                        "name": "the value should be 4",
+                        "line": 22,
+                        "match": {
+                            "location": "CalculatorContext::theValueShouldBe()"
+                        },
+                        "result": {
+                            "status": "failed",
+                            "duration": 0,
+                            "error_message": "Expected 4, got 3."
+                        }
+                    },
+                    {
+                        "keyword": "And ",
+                        "name": "the value should be 3",
+                        "line": 23,
+                        "match": {
+                            "location": ""
+                        },
+                        "result": {
+                            "status": "skipped",
+                            "duration": 0
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

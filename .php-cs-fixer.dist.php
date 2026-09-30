@@ -2,12 +2,8 @@
 
 $finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
-    ->exclude('var')
-;
+    ->exclude('var');
 
 return (new PhpCsFixer\Config())
-    ->setRules([
-        '@Symfony' => true,
-    ])
-    ->setFinder($finder)
-;
+    ->setRules(['@Symfony' => true, 'single_line_empty_body' => true])
+    ->setFinder($finder);

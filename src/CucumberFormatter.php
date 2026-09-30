@@ -17,27 +17,26 @@ use Behat\Gherkin\Node\NamedScenarioInterface;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\TaggedNodeInterface;
-use Behat\Testwork\EventDispatcher\Event\AfterSuiteTested;
-use Behat\Testwork\EventDispatcher\Event\ExerciseCompleted;
+use Behat\Testwork\EventDispatcher\Event\BeforeSuiteTested;
 use Behat\Testwork\EventDispatcher\Event\SuiteTested;
 use Behat\Testwork\Output\Formatter;
 use Behat\Testwork\Tester\Result\TestResult;
 
 /**
- * Writes a Cucumber JSON report, including feature and scenario tags.
+ * This class is responsible for formatting test results in Cucumber JSON format.
  *
- * When the output path is a directory (ending with a slash), one "<prefix><suite>.json" report is written per suite instead.
+ * One "<suite>.json" report is written per suite in the output path.
  *
  * @see https://github.com/cucumber/cucumber-json-schema
  */
-final class CucumberFormatter implements Formatter
+class CucumberFormatter implements Formatter
 {
     public const NAME = 'cucumber';
 
     /** @var array<string, mixed> */
     private array $parameters = [];
 
-    /** @var array<int, array<string, mixed>> */
+    /** @var list<array<string, mixed>> */
     private array $features = [];
 
     private ?int $currentFeature = null;
@@ -47,12 +46,18 @@ final class CucumberFormatter implements Formatter
     private float $stepStart = 0.0;
 
     public function __construct(
-        private readonly ReportPrinter $printer,
-        private readonly string $basePath,
-        string $outputPath,
-        private readonly string $prefix = '',
-    ) {
-        $this->printer->setOutputPath($outputPath);
+        private readonly string $pathsBase,
+        private readonly CucumberOutputPrinter $outputPrinter,
+    ) {}
+
+    public function setParameter(string $name, mixed $value): void
+    {
+        $this->parameters[$name] = $value;
+    }
+
+    public function getParameter(string $name): mixed
+    {
+        return $this->parameters[$name] ?? null;
     }
 
     public static function getSubscribedEvents(): array
@@ -65,7 +70,6 @@ final class CucumberFormatter implements Formatter
             StepTested::BEFORE => 'onBeforeStep',
             StepTested::AFTER => 'onAfterStep',
             SuiteTested::AFTER => 'onAfterSuite',
-            ExerciseCompleted::AFTER => 'onAfterExercise',
         ];
     }
 
@@ -76,31 +80,25 @@ final class CucumberFormatter implements Formatter
 
     public function getDescription(): string
     {
-        return 'Outputs a Cucumber JSON report.';
+        return 'Cucumber JSON formatter';
     }
 
-    public function getOutputPrinter(): ReportPrinter
+    public function getOutputPrinter(): CucumberOutputPrinter
     {
-        return $this->printer;
+        return $this->outputPrinter;
     }
 
-    public function setParameter(string $name, mixed $value): void
+    /**
+     * When a suite starts, start a fresh report named after the suite and remove the previous one.
+     */
+    public function onBeforeSuite(BeforeSuiteTested $event): void
     {
-        $this->parameters[$name] = $value;
-    }
+        $this->features = [];
+        $this->currentFeature = null;
+        $this->currentScenario = null;
 
-    public function getParameter(string $name): mixed
-    {
-        return $this->parameters[$name] ?? null;
-    }
-
-    public function onBeforeSuite(): void
-    {
-        if ($this->isReportPerSuite()) {
-            $this->features = [];
-            $this->currentFeature = null;
-            $this->currentScenario = null;
-        }
+        $this->outputPrinter->setFileName(strtolower((string) preg_replace('/[^A-Za-z0-9._-]+/', '-', $event->getSuite()->getName())).'.json');
+        $this->outputPrinter->removeOldFile();
     }
 
     public function onBeforeFeature(BeforeFeatureTested $event): void
@@ -189,40 +187,16 @@ final class CucumberFormatter implements Formatter
         $this->features[$this->currentFeature]['elements'][$this->currentScenario]['steps'][] = $stepData;
     }
 
-    public function onAfterSuite(AfterSuiteTested $event): void
+    /**
+     * Suites without any feature, e.g. filtered out entirely, produce no report.
+     */
+    public function onAfterSuite(): void
     {
-        // Suites without any feature, e.g. filtered out entirely, produce no report.
-        if (!$this->isReportPerSuite() || [] === $this->features) {
+        if ([] === $this->features) {
             return;
         }
 
-        $directory = (string) $this->printer->getOutputPath();
-        $fileName = (string) preg_replace('/[^A-Za-z0-9._-]+/', '-', $this->prefix.$event->getSuite()->getName()).'.json';
-
-        $this->printer->setOutputPath(rtrim($directory, '/'.\DIRECTORY_SEPARATOR).\DIRECTORY_SEPARATOR.$fileName);
-        $this->writeReport();
-
-        $this->printer->setOutputPath($directory);
-    }
-
-    public function onAfterExercise(): void
-    {
-        if (!$this->isReportPerSuite()) {
-            $this->writeReport();
-        }
-    }
-
-    private function isReportPerSuite(): bool
-    {
-        $path = (string) $this->printer->getOutputPath();
-
-        return str_ends_with($path, '/') || str_ends_with($path, \DIRECTORY_SEPARATOR) || is_dir($path);
-    }
-
-    private function writeReport(): void
-    {
-        $this->printer->write(json_encode(array_values($this->features), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE | \JSON_THROW_ON_ERROR));
-        $this->printer->flush();
+        $this->outputPrinter->write(json_encode($this->features, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE | \JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -248,7 +222,7 @@ final class CucumberFormatter implements Formatter
 
     private function relativePath(string $path): string
     {
-        $base = rtrim($this->basePath, \DIRECTORY_SEPARATOR).\DIRECTORY_SEPARATOR;
+        $base = rtrim($this->pathsBase, \DIRECTORY_SEPARATOR).\DIRECTORY_SEPARATOR;
 
         return str_starts_with($path, $base) ? substr($path, \strlen($base)) : $path;
     }

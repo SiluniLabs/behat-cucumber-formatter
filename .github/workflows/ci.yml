@@ -35,4 +35,5 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
       - run: composer phpstan
+      - run: composer rector
       - run: composer cs

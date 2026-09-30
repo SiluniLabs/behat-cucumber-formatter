@@ -9,7 +9,7 @@ use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
 
-final class FeatureContext implements Context
+final class CalculatorContext implements Context
 {
     private int $value = 0;
 
