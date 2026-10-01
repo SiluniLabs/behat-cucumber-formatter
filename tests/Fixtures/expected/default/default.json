@@ -1,0 +1,375 @@
+[
+    {
+        "uri": "features/calculator.feature",
+        "id": "calculator",
+        "keyword": "Feature",
+        "name": "Calculator",
+        "description": "    In order to count\n    As a user\n    I need to add values",
+        "line": 2,
+        "tags": [
+            {
+                "name": "@calculator",
+                "line": 1
+            }
+        ],
+        "elements": [
+            {
+                "id": "calculator;passing-scenario",
+                "keyword": "Scenario",
+                "name": "Passing scenario",
+                "description": "",
+                "line": 11,
+                "type": "scenario",
+                "tags": [
+                    {
+                        "name": "@calculator",
+                        "line": 1
+                    },
+                    {
+                        "name": "@PROJ-1",
+                        "line": 10
+                    }
+                ],
+                "steps": [
+                    {
+                        "keyword": "Given ",
+                        "name": "a value of 1",
+                        "line": 8,
+                        "match": {
+                            "location": "CalculatorContext::aValueOf()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "When ",
+                        "name": "I add 2",
+                        "line": 12,
+                        "match": {
+                            "location": "CalculatorContext::iAdd()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "Then ",
+                        "name": "the value should be 3",
+                        "line": 13,
+                        "match": {
+                            "location": "CalculatorContext::theValueShouldBe()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "And ",
+                        "name": "the value should be described as:",
+                        "line": 14,
+                        "match": {
+                            "location": "CalculatorContext::theValueShouldBeDescribedAs()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        },
+                        "doc_string": {
+                            "value": "value 3",
+                            "line": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "calculator;failing-scenario",
+                "keyword": "Scenario",
+                "name": "Failing scenario",
+                "description": "",
+                "line": 20,
+                "type": "scenario",
+                "tags": [
+                    {
+                        "name": "@calculator",
+                        "line": 1
+                    },
+                    {
+                        "name": "@PROJ-2",
+                        "line": 19
+                    }
+                ],
+                "steps": [
+                    {
+                        "keyword": "Given ",
+                        "name": "a value of 1",
+                        "line": 8,
+                        "match": {
+                            "location": "CalculatorContext::aValueOf()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "When ",
+                        "name": "I add 2",
+                        "line": 21,
+                        "match": {
+                            "location": "CalculatorContext::iAdd()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "Then ",
+                        "name": "the value should be 4",
+                        "line": 22,
+                        "match": {
+                            "location": "CalculatorContext::theValueShouldBe()"
+                        },
+                        "result": {
+                            "status": "failed",
+                            "duration": 0,
+                            "error_message": "Expected 4, got 3."
+                        }
+                    },
+                    {
+                        "keyword": "And ",
+                        "name": "the value should be 3",
+                        "line": 23,
+                        "match": {
+                            "location": ""
+                        },
+                        "result": {
+                            "status": "skipped",
+                            "duration": 0
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "calculator;undefined-step",
+                "keyword": "Scenario",
+                "name": "Undefined step",
+                "description": "",
+                "line": 25,
+                "type": "scenario",
+                "tags": [
+                    {
+                        "name": "@calculator",
+                        "line": 1
+                    }
+                ],
+                "steps": [
+                    {
+                        "keyword": "Given ",
+                        "name": "a value of 1",
+                        "line": 8,
+                        "match": {
+                            "location": "CalculatorContext::aValueOf()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "When ",
+                        "name": "I multiply by 2",
+                        "line": 26,
+                        "match": {
+                            "location": ""
+                        },
+                        "result": {
+                            "status": "undefined",
+                            "duration": 0
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "calculator;table-argument",
+                "keyword": "Scenario",
+                "name": "Table argument",
+                "description": "",
+                "line": 28,
+                "type": "scenario",
+                "tags": [
+                    {
+                        "name": "@calculator",
+                        "line": 1
+                    }
+                ],
+                "steps": [
+                    {
+                        "keyword": "Given ",
+                        "name": "a value of 1",
+                        "line": 8,
+                        "match": {
+                            "location": "CalculatorContext::aValueOf()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "When ",
+                        "name": "I add the following values:",
+                        "line": 29,
+                        "match": {
+                            "location": "CalculatorContext::iAddTheFollowingValues()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        },
+                        "rows": [
+                            {
+                                "cells": [
+                                    "2"
+                                ]
+                            },
+                            {
+                                "cells": [
+                                    "3"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "keyword": "Then ",
+                        "name": "the value should be 6",
+                        "line": 32,
+                        "match": {
+                            "location": "CalculatorContext::theValueShouldBe()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "calculator;outline-scenario-1",
+                "keyword": "Example",
+                "name": "Outline scenario #1",
+                "description": "",
+                "line": 41,
+                "type": "scenario",
+                "tags": [
+                    {
+                        "name": "@calculator",
+                        "line": 1
+                    },
+                    {
+                        "name": "@PROJ-3",
+                        "line": 41
+                    }
+                ],
+                "steps": [
+                    {
+                        "keyword": "Given ",
+                        "name": "a value of 1",
+                        "line": 8,
+                        "match": {
+                            "location": "CalculatorContext::aValueOf()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "When ",
+                        "name": "I add 1",
+                        "line": 36,
+                        "match": {
+                            "location": "CalculatorContext::iAdd()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "Then ",
+                        "name": "the value should be 2",
+                        "line": 37,
+                        "match": {
+                            "location": "CalculatorContext::theValueShouldBe()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "calculator;outline-scenario-2",
+                "keyword": "Example",
+                "name": "Outline scenario #2",
+                "description": "",
+                "line": 42,
+                "type": "scenario",
+                "tags": [
+                    {
+                        "name": "@calculator",
+                        "line": 1
+                    },
+                    {
+                        "name": "@PROJ-3",
+                        "line": 42
+                    }
+                ],
+                "steps": [
+                    {
+                        "keyword": "Given ",
+                        "name": "a value of 1",
+                        "line": 8,
+                        "match": {
+                            "location": "CalculatorContext::aValueOf()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "When ",
+                        "name": "I add 4",
+                        "line": 36,
+                        "match": {
+                            "location": "CalculatorContext::iAdd()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    },
+                    {
+                        "keyword": "Then ",
+                        "name": "the value should be 5",
+                        "line": 37,
+                        "match": {
+                            "location": "CalculatorContext::theValueShouldBe()"
+                        },
+                        "result": {
+                            "status": "passed",
+                            "duration": 0
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

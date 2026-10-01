@@ -7,7 +7,7 @@ Feature: Calculator
     Background:
         Given a value of 1
 
-    @PROJ-1 @smoke
+    @PROJ-1
     Scenario: Passing scenario
         When I add 2
         Then the value should be 3
